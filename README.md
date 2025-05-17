@@ -200,7 +200,40 @@ Navigate to Messages > Push > New Push
 
 Create and send a test notification
 
-✅ Done!
 You’ve successfully set up OneSignal with a Kivy-iOS app!
 
-8. Next step: Configure how to send a message to a specific device.
+8. test push notification:
+   create api_key of onesignal : onesignal website -> click on Settings in the navigation menu on the left -> keys & IDs -> add key
+   get onesignal id and subscription id from audience >> subscriptions in the navigation menu on the left
+   test with python:
+```
+import requests
+
+ONESIGNAL_APP_ID = "your_onesignal app id"
+ONESIGNAL_API_KEY = "your api key"
+TARGET_PLAYER_ID = "your subscription id"
+
+url = "https://onesignal.com/api/v1/notifications"
+headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": f"Basic {ONESIGNAL_API_KEY}"
+}
+
+payload = {
+    "app_id": ONESIGNAL_APP_ID,
+    "include_player_ids": [TARGET_PLAYER_ID],  # 或改成 include_external_user_ids
+    "headings": {"en": "test push notification"},
+    "contents": {"en": "this is a test from python"},
+    "priority": 10,
+}
+
+# send notification
+response = requests.post(url, headers=headers, json=payload)
+
+# print result
+print("Status Code:", response.status_code)
+print("Response Body:", response.text)
+```
+
+9. next step: get subscription id from xcode
+   
