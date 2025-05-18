@@ -168,15 +168,25 @@ You will receive your OneSignal App ID
 5.1 In main.py
 Add inside on_build():
 ```
-if platform == 'ios':
-    from pyobjus import autoclass, objc_dict
+        if platform == 'ios':
+            from pyobjus import autoclass, objc_str
 
-    self.OneSignal = autoclass('OneSignal')
-    appid = 'YOUR_ONESIGNAL_APP_ID'
-    launch_options = objc_dict({})
+            self.OneSignal = autoclass('OneSignal')
+            mock_launch_options = objc_dict({})
+            appid = 'YOUR_APP_IP'
 
-    self.OneSignal.setAppId_(appid)
-    self.OneSignal.initialize_withLaunchOptions_(appid, launch_options)
+            launch_options = objc_dict({})
+            self.OneSignal.setAppId_(appid)
+            self.OneSignal.initialize_withLaunchOptions_(appid,launch_options)
+
+            def read_push_id():
+                file_path = os.path.expanduser("~/Documents/pushid.txt")
+                if os.path.exists(file_path):
+                    with open(file_path, "r") as f:
+                        return f.read().strip()
+                return None
+            pushid = read_push_id()
+            print(f'pushid in python :{pushid}')
 ```
 5.2 In main.m
 Modify main() as follows:
@@ -186,11 +196,24 @@ int main(int argc, char *argv[]) {
 
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-    [OneSignal.Debug setLogLevel:ONE_S_LL_VERBOSE];
-    [OneSignal initialize:@"YOUR_APP_ID" withLaunchOptions:nil];
-
+   [OneSignal.Debug setLogLevel:ONE_S_LL_VERBOSE];
+    // Initialize with your OneSignal App ID
+    [OneSignal initialize:@"YOUR_APP_IP" withLaunchOptions:nil];
+    // Use this method to prompt for push notifications.
+    // We recommend removing this method after testing and instead use In-App Messages to prompt for notification permission.
     [OneSignal.Notifications requestPermission:^(BOOL accepted) {
-        NSLog(@"User accepted notifications: %d", accepted);
+      NSLog(@"User accepted notifications: %d", accepted);
+        // get onesignal id
+        NSString* userid = OneSignal.User.onesignalId;
+        NSLog(@"User ID: %@", userid);
+
+        //get subscription id <- this one for api send push notification
+        NSString* pushid = OneSignal.User.pushSubscription.id;
+        NSLog(@"push ID: %@", pushid);
+
+        // sSave the file so that it can be accessed by the Python code.
+        NSString *filePath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/pushid.txt"];
+        [pushid writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     } fallbackToSettings:false];
 ```
 7. Testing
@@ -235,5 +258,5 @@ print("Status Code:", response.status_code)
 print("Response Body:", response.text)
 ```
 
-9. next step: get subscription id from xcode
+9. The next step is to place the api_key and app_id in a Google Cloud Function, so that when the API sends a push request, the function is triggered to automatically send the push notification.
    
