@@ -155,7 +155,9 @@ pod install
 3. Create .p8 APNs Key
 Go to Apple Developer Center → Certificates, Identifiers & Profiles
 
-Under Keys, create a new Apple Push Notification service (APNs) key
+Under Keys, create a new Apple Push Notification service (APNs) key 
+APNs keys only need to be set up once. When configuring a new app in OneSignal later, the same Key ID and auth file will be used. Therefore, it's important to keep the file safely stored for future use, in case you need to set it up again.
+
 
 Under Identifiers, create a new identifier using your Bundle ID and enable Push Notifications
 
