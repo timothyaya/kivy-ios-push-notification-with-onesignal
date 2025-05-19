@@ -270,5 +270,152 @@ print("Status Code:", response.status_code)
 print("Response Body:", response.text)
 ```
 
-9. The next step is to place the api_key and app_id in a Google Cloud Function, so that when the API sends a push request, the function is triggered to automatically send the push notification.
-   
+9. firebase backend
+
+init functions:
+```
+npm install -g firebase-tools
+firebase login
+firebase init functions
+```
+
+replace ./functions/index.js with:
+```
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const https = require("https");
+
+admin.initializeApp();
+
+
+exports.sendPushNotification = functions.https.onRequest((req, res) => {
+  const token = req.body.token;
+  const title = req.body.title;
+  const body = req.body.body;
+
+  const message = {
+    notification: {
+      title: title,
+      body: body,
+    },
+    token: token,
+  };
+
+  admin.messaging().send(message)
+    .then((response) => {
+      console.log("Successfully sent Firebase message:", response);
+      res.status(200).send("Firebase Notification sent!");
+    })
+    .catch((error) => {
+      console.error("Firebase error:", error);
+      res.status(500).send("Firebase Notification failed!");
+    });
+});
+
+
+exports.sendOneSignalNotification = functions.https.onRequest((req, res) => {
+  const ONESIGNAL_APP_ID = "your_onesignal_app_id";      
+  const ONESIGNAL_API_KEY = "your_onesignal_api_key";    
+
+  const playerId = req.body.playerId;
+  const title = req.body.title || "Default Title";
+  const message = req.body.body || "Default Message";
+
+  const payload = JSON.stringify({
+    app_id: ONESIGNAL_APP_ID,
+    include_player_ids: [playerId],
+    headings: { en: title },
+    contents: { en: message },
+    priority: 10
+  });
+
+  const options = {
+    hostname: "onesignal.com",
+    path: "/api/v1/notifications",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": `Basic ${ONESIGNAL_API_KEY}`,
+      "Content-Length": Buffer.byteLength(payload)
+    }
+  };
+
+  const request = https.request(options, (response) => {
+    let responseData = "";
+    response.on("data", (chunk) => {
+      responseData += chunk;
+    });
+    response.on("end", () => {
+      console.log("OneSignal response:", responseData);
+      res.status(200).send("OneSignal Notification sent!");
+    });
+  });
+
+  request.on("error", (error) => {
+    console.error("OneSignal request error:", error);
+    res.status(500).send("OneSignal Notification failed!");
+  });
+
+  request.write(payload);
+  request.end();
+});
+```
+upload:
+```
+firebase deploy --only functions
+```
+and you will get two URLs (for FCM and onesignal)
+
+11. test functions:
+```
+import requests
+
+def send_firebase_notification(token, title, body):
+    FIREBASE_PUSH_URL = "https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/sendPushNotification"
+
+    payload = {
+        "token": token,
+        "title": title,
+        "body": body
+    }
+
+    try:
+        response = requests.post(FIREBASE_PUSH_URL, json=payload)
+        print("[Firebase] Status Code:", response.status_code)
+        print("[Firebase] Response:", response.text)
+        return response.status_code, response.text
+    except Exception as e:
+        print("[Firebase] Error:", e)
+        return None, str(e)
+
+def send_onesignal_notification(player_id, title, body):
+    ONESIGNAL_PUSH_URL = "https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/sendOneSignalNotification"
+
+    payload = {
+        "playerId": player_id,
+        "title": title,
+        "body": body
+    }
+
+    try:
+        response = requests.post(ONESIGNAL_PUSH_URL, json=payload)
+        print("[OneSignal] Status Code:", response.status_code)
+        print("[OneSignal] Response:", response.text)
+        return response.status_code, response.text
+    except Exception as e:
+        print("[OneSignal] Error:", e)
+        return None, str(e)
+
+if __name__ == "__main__":
+    # test firebase
+    firebase_token = "YOUR_FIREBASE_DEVICE_TOKEN"
+    send_firebase_notification(firebase_token, "Hello Android", "This is a Firebase test")
+
+    print("\n" + "="*50 + "\n")
+
+    # test OneSignal 
+    onesignal_player_id = "YOUR_ONESIGNAL_PLAYER_ID"
+    send_onesignal_notification(onesignal_player_id, "Hello iOS", "This is a OneSignal test")
+```
+
+all finished!!!!
