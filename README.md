@@ -94,6 +94,7 @@ class NotificationService: UNNotificationServiceExtension {
    - onesignal 5.2.11 download fetal
    - specified 5.2.10, OneSignalInAppMessages' (no such file) <--got this error)
 📘 Based on: Setup Instructions (Google Docs) (https://docs.google.com/document/d/1fBYmxJu7Qm-ab8hD4aSME7M6rqYmnMQFfUbMFgtg9mQ/edit?tab=t.0)
+
 2.1 Install CocoaPods
 ```
 sudo gem install cocoapods
@@ -156,22 +157,18 @@ pod install
 3. Create .p8 APNs Key
 Go to Apple Developer Center → Certificates, Identifiers & Profiles
 
-Under Keys, create a new Apple Push Notification service (APNs) key 
+- Under Keys, create a new Apple Push Notification service (APNs) key 
 APNs keys only need to be set up once. When configuring a new app in OneSignal later, the same Key ID and auth file will be used. Therefore, it's important to keep the file safely stored for future use, in case you need to set it up again.
-
-
-Under Identifiers, create a new identifier using your Bundle ID and enable Push Notifications
-
+- Under Identifiers, create a new identifier using your Bundle ID and enable Push Notifications
 Save your Team ID
 
 4. OneSignal Dashboard
 In OneSignal dashboard:
 
-Go to Settings > Apple Push
-
+- Go to Settings > Apple Push
 Upload .p8 key, Team ID, and Bundle ID
-
 You will receive your OneSignal App ID
+- after finish push setting, click to enter the app -> settings -> Keys & IDs -> add key to create a api_key
 
 5. Kivy iOS App Integration
 5.1 In main.py
