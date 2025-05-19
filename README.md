@@ -130,7 +130,10 @@ pod install
 2.4 Open Workspace
 Open .xcworkspace (not .xcodeproj):
 
-2.5 Build Settings
+2.5 Build Settings：
+
+If this step is not done, an error saying 'onesignalId' not found will occur later when using NSString* userid = OneSignal.User.onesignalId;.
+
 Update build settings:
 
 Enable Modules (C and Objective-C): Yes
@@ -205,7 +208,7 @@ int main(int argc, char *argv[]) {
 
    [OneSignal.Debug setLogLevel:ONE_S_LL_VERBOSE];
     // Initialize with your OneSignal App ID
-    [OneSignal initialize:@"YOUR_APP_IP" withLaunchOptions:nil];
+    [OneSignal initialize:@"YOUR_APP_ID" withLaunchOptions:nil];
     // Use this method to prompt for push notifications.
     // We recommend removing this method after testing and instead use In-App Messages to prompt for notification permission.
     [OneSignal.Notifications requestPermission:^(BOOL accepted) {
@@ -223,6 +226,8 @@ int main(int argc, char *argv[]) {
         [pushid writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     } fallbackToSettings:false];
 ```
+notice: remember to change the YOUR_APP_IP to your app_id which retrived from onesignal website
+
 7. Testing
 Go to OneSignal dashboard:
 
