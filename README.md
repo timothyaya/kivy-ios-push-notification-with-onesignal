@@ -169,15 +169,14 @@ You will receive your OneSignal App ID
 Add inside on_build():
 ```
         if platform == 'ios':
-            from pyobjus import autoclass, objc_str
-
-            self.OneSignal = autoclass('OneSignal')
-            mock_launch_options = objc_dict({})
-            appid = 'YOUR_APP_IP'
-
-            launch_options = objc_dict({})
-            self.OneSignal.setAppId_(appid)
-            self.OneSignal.initialize_withLaunchOptions_(appid,launch_options)
+            // not needed, bebacuse it's initialized in main.m
+            // from pyobjus import autoclass, objc_str
+            // self.OneSignal = autoclass('OneSignal')
+            // mock_launch_options = objc_dict({})
+            // appid = 'YOUR_APP_IP'
+            // launch_options = objc_dict({})
+            // self.OneSignal.setAppId_(appid)
+            // self.OneSignal.initialize_withLaunchOptions_(appid,launch_options)
 
             def read_push_id():
                 file_path = os.path.expanduser("~/Documents/pushid.txt")
