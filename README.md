@@ -189,6 +189,11 @@ Add inside on_build():
 ```
 5.2 In main.m
 Modify main() as follows:
+import dependencies:
+```
+#import <OneSignalFramework/OneSignalFramework.h>
+```
+
 ```
 int main(int argc, char *argv[]) {
     int ret = 0;
