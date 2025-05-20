@@ -93,6 +93,7 @@ class NotificationService: UNNotificationServiceExtension {
    (tried to use "add package dependencies", not working:
    - onesignal 5.2.11 download fetal
    - specified 5.2.10, OneSignalInAppMessages' (no such file) <--got this error)
+   
 📘 Based on: Setup Instructions (Google Docs) (https://docs.google.com/document/d/1fBYmxJu7Qm-ab8hD4aSME7M6rqYmnMQFfUbMFgtg9mQ/edit?tab=t.0)
 
 2.1 Install CocoaPods
