@@ -18,6 +18,7 @@ Use the Xcode version used to create your project:
 sudo xcode-select -s /Applications/Xcode15.app
 ```
 1.2 Enable Push and Background Capabilities
+
 Go to App Target > Signing & Capabilities:
 
 Enable Push Notifications
@@ -25,13 +26,15 @@ Enable Push Notifications
 Enable Background Modes → Check Remote notifications
 
 1.3 Setup App Group  (not really necessary, if only use text push)
+
 In the same section:
 
 Add App Groups
 
 Add container: group.bundleid.onesignal
 
-1.4 Create Notification Service Extension (not really necessary, if only use text push)
+1.4 Create Notification Service Extension  (not really necessary, if only use text push)
+
 Go to File > New > Target > Notification Service Extension
 
 Set Product Name to: OneSignalNotificationServiceExtension
@@ -41,6 +44,7 @@ Ensure Project matches your app's name
 Do not activate the new scheme when prompted
 
 1.5 Configure Notification Service Target: (not really necessary, if only use text push)
+
 In the newly created OneSignalNotificationServiceExtension target:
 
 In General, set Minimum Deployment to match your main target
@@ -48,6 +52,7 @@ In General, set Minimum Deployment to match your main target
 Under Signing & Capabilities, add the same App Group container used in the main app
 
 1.6 Replace NotificationService.swift Code: (not really necessary, if only use text push)
+
 Replace the default Swift file with the following:
 
 ```
@@ -143,15 +148,15 @@ Update build settings:
 
 Enable Modules (C and Objective-C): Yes
 
-Other Linker Flags: add -ObjC and $(inherited)
+Other Linker Flags: add -ObjC and $(inherited) <-- not really necessary
 
-Framework Search Paths: add $(inherited)
+Framework Search Paths: add $(inherited)  <-- not really necessary
 
-Header Search Paths: add $(inherited)
+Header Search Paths: add $(inherited)  <-- not really necesary
 
-In Pods > Build Settings:
+In Pods > Build Settings:  
 
-Build Active Architecture Only → Release: No
+Build Active Architecture Only → Release: No <-- not really necesary
 
 Close Xcode and run:
 ```
