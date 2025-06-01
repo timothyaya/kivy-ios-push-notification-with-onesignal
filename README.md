@@ -24,14 +24,14 @@ Enable Push Notifications
 
 Enable Background Modes → Check Remote notifications
 
-1.3 Setup App Group
+1.3 Setup App Group  (not really necessary, if only use text push)
 In the same section:
 
 Add App Groups
 
 Add container: group.bundleid.onesignal
 
-1.4 Create Notification Service Extension
+1.4 Create Notification Service Extension (not really necessary, if only use text push)
 Go to File > New > Target > Notification Service Extension
 
 Set Product Name to: OneSignalNotificationServiceExtension
@@ -40,14 +40,14 @@ Ensure Project matches your app's name
 
 Do not activate the new scheme when prompted
 
-1.5 Configure Notification Service Target:
+1.5 Configure Notification Service Target: (not really necessary, if only use text push)
 In the newly created OneSignalNotificationServiceExtension target:
 
 In General, set Minimum Deployment to match your main target
 
 Under Signing & Capabilities, add the same App Group container used in the main app
 
-1.6 Replace NotificationService.swift Code:
+1.6 Replace NotificationService.swift Code: (not really necessary, if only use text push)
 Replace the default Swift file with the following:
 
 ```
@@ -126,6 +126,8 @@ target 'OneSignalNotificationServiceExtension' do
   pod 'OneSignalXCFramework', '>= 5.2.9', '< 6.0'
 end
 ```
+if text push only, don't need to pod install target 'OneSignalNotificationServiceExtension' session
+
 2.3 Install Pods
 ```
 pod install
