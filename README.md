@@ -10,7 +10,7 @@ This guide covers integrating [OneSignal](https://onesignal.com) push notificati
 
 ### 📘 Based on: [OneSignal iOS SDK Setup Guide](https://documentation.onesignal.com/docs/ios-sdk-setup)
 
-### 1.1 Select Xcode version
+### 1.1 Select Xcode version (no need to do this after new kivy-ios version (202505) is launched)
 
 Use the Xcode version used to create your project:
 
